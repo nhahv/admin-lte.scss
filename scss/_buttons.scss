@@ -2,6 +2,52 @@
  * Component: Button
  * -----------------
  */
+$enable-hover-media-query:true;
+@mixin hover {
+    @if $enable-hover-media-query {
+        // See Media Queries Level 4: http://drafts.csswg.org/mediaqueries/#hover
+        // Currently shimmed by https://github.com/twbs/mq4-hover-shim
+        @media (hover: hover) {
+            &:hover { @content }
+        }
+    }
+    @else {
+        &:hover { @content }
+    }
+}
+@mixin button-outline-variant($color) {
+    color: $color;
+    background-image: none;
+    background-color: transparent;
+    border-color: $color;
+    border-radius: 2px;
+
+    &:focus,
+    &.focus,
+    &:active,
+    &.active,
+    .open > &.dropdown-toggle {
+        color: #fff;
+        background-color: $color;
+        border-color: $color;
+    }
+    @include hover {
+        color: #fff;
+        background-color: $color;
+        border-color: $color;
+    }
+
+    &.disabled,
+    &:disabled {
+        &:focus,
+        &.focus {
+            border-color: lighten($color, 20%);
+        }
+        @include hover {
+            border-color: lighten($color, 20%);
+        }
+    }
+}
 
 .btn {
   @include border-radius-same($btn-border-radius);
@@ -97,17 +143,27 @@
     background-color: darken($yellow, 5%);
   }
 }
-.btn-outline {
-  border: 1px solid #fff;
-  background: transparent;
-  color: #fff;
-  &:hover,
-    &:focus,
-    &:active {
-    color: rgba(255,255,255,.7);
-    border-color: rgba(255,255,255,.7);
-  }
+
+// Remove all backgrounds
+.btn-primary-outline {
+    @include button-outline-variant($light-blue);
 }
+.btn-secondary-outline {
+    @include button-outline-variant(#444);
+}
+.btn-info-outline {
+    @include button-outline-variant($aqua);
+}
+.btn-success-outline {
+    @include button-outline-variant($green);
+}
+.btn-warning-outline {
+    @include button-outline-variant($yellow);
+}
+.btn-danger-outline {
+    @include button-outline-variant($red);
+}
+
 .btn-link {
   @include box-shadow(none);
 }
